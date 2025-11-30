@@ -1,13 +1,17 @@
 # SDRAM Design & Implementation Using System Verilog
-Student's names:
-- Hamza Algohary
-- Alhasan Abdulkhalek
-- Khaled Ekramy
-- Mohammad Gomaa
-- Mostafa Ashour
+#### Students' names:
+- **Hamza Algohary**
+- **Alhasan Abdulkhalek**
+- **Khaled Ekramy**
+- **Mohammad Gomaa**
+- **Mostafa Ashour**
+
+**This document is written in a way that is easy to follow as a lab experiment.**
+
 ## Prerequisites
-1. Knowing the operation design of DRAM (using coincident selection).
+1. Knowing the operation and design of DRAM (using coincident selection).
 2. Basice knoweledge of Verilog or System Verilog
+
 ### Required Software
 1. A **System Verilog** compiler.
 2. A vcd file viewer.
@@ -21,7 +25,7 @@ Please use a search engine to find the right tools.
 
 Being synchronous implies two things:
 1. It is a finite state machine (like any sequential circuit).
-2. Synchronization requires registers for input, output and other stuff.
+2. Synchronization requires registers for input, output and state.
 
 Another thing SDRAMs are capable of is what is know as **burst read** and **burst write**, each of which means reading or writing multiple consecutive bytes per one read/write commmand. The number of bytes is knows as **burst length**. Each consecutive byte is transferred at a new positive edge.
 
@@ -63,7 +67,7 @@ With that in mind we may assign refresh to be triggered by activating **RAS** & 
 We will go with the following state machine:
 ![SDRAM State Diagram](media/sdram-state-diagram-light.png)
 
-From the state diagram, the SDRAM has 6 state. It also has 3 possible commands to drive it through the state, these commands are:
+From the state diagram, the SDRAM has 6 states. It also has 3 possible commands to drive it through these states, these commands are:
 1. Select Row (RAS & CS active , CAS inactive)
 2. Select Column (CAS & CS active , RAS inactive)
 3. Refresh Next Row (RAS & CAS & CS active)
@@ -120,13 +124,13 @@ endmodule
 
 The first six constants are to define the states, and the three below are to define commands. The last one represents burst length of course.
 
-Now let's define the memory cells matrix as a 2D array of registers (where a register represents a cell whose length is bits). Its dimensions are 16x16.
+Now let's define the memory cells matrix as a 2D array of registers (where a register represents a cell whose length is 8 bits). Its dimensions are 16x16.
 
 ```verilog
     reg [7:0] memory [15:0][15:0];
 ```
 
-> Note: In actual DRAMs, memory cells as you know are actually made with 1 transistor + 1 capacitor.
+> Note: In actual DRAMs, bits as you know are actually made with 1 transistor + 1 capacitor (not registers).
 
 Now let's add a bunch of registers that represent the SDRAM's current state
 
@@ -241,7 +245,7 @@ Now inside it you may add the following case statment
     end
 ```
 
-You shoud be able to fill in the TODOs yourself from the state diagram above. Anyway add the following to functions at the bottom of the file to aid you in your implementation.
+You shoud be able to fill in the TODOs yourself from the state diagram above. Anyway add the following two functions at the bottom of the file to aid you in your implementation.
 
 ```verilog
 function [16*8-1:0] get_row;
@@ -265,7 +269,7 @@ task put_row;
 endtask
 ```
 
-These two functions write will help you transfer an entire row between `memory` and `selected_row` register.
+These two functions will help you transfer an entire row between `memory` and `selected_row` register.
 
 In your code you may use them as follows:
 ```verilog
@@ -401,7 +405,7 @@ task put_row;
 endtask
 ```
 
-Copy and paste the first two lines in the above code in your code. The comment will eliminate an error that prevenets your code from running if case statment does not handle all cases. As for ``` `timescale 1ns/1ps ``` it will be useful when testing.
+Copy and paste the first two lines in the above code in your code. The comment will eliminate an error that prevenets your code from running if a case statment does not handle all cases. As for ``` `timescale 1ns/1ps ``` it will be useful when testing.
 
 ### 5. Write the test bench
 The test bench is another module that is made for testing, you may just copy and paste the following code (in another file of course)
@@ -546,11 +550,12 @@ Read byte: dd
 === SDRAM TEST END ===
 ```
 
-It should also produce a file named `wave.vcd` which represents the time diagram for your for a write operation followed by a read operation of these same written bytes.
+It should also produce a file named `wave.vcd` which represents the time diagram for a write operation followed by a read operation of these same written bytes.
 
-To view that file, use a search engine for the following keywords `vcd viewer`. The app used here is called GtkWave.
+To view that file you need a vcd viewer, use a search engine for the following keywords `vcd viewer`. The app we used here is called **GtkWave**.
 
-Viewing `wave.vcd` in GtkWave
+Viewing `wave.vcd` in **GtkWave**
+
 ![](media/wave.png)
 
 If something is not right in your output then please check your implementation, use `$display()` and `$monitor()` to debug your code.
