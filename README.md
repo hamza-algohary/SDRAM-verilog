@@ -1,5 +1,10 @@
 # SDRAM Design & Implementation Using System Verilog
-
+Student's names:
+- Hamza Algohary
+- Alhasan Abdulkhalek
+- Khaled Ekramy
+- Mohammad Gomaa
+- Mostafa Ashour
 ## Prerequisites
 1. Knowing the operation design of DRAM (using coincident selection).
 2. Basice knoweledge of Verilog or System Verilog
